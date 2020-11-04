@@ -1,0 +1,238 @@
+%% LyX 2.0.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english,spanish]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{listings}
+\usepackage{amstext}
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+\newcommand{\lyxaddress}[1]{
+\par {\raggedright #1
+\vspace{1.4em}
+\noindent\par}
+}
+
+\makeatother
+
+\usepackage{babel}
+\addto\shorthandsspanish{\spanishdeactivate{~<>.}}
+
+\begin{document}
+
+\title{Esbozo de un método rápido para probar Covering Arrays}
+
+
+\author{Ing. Vicente Oscar Mier Vela}
+
+
+\date{10 de julio del 2013}
+
+\maketitle
+
+\lyxaddress{Curso propedéutico del 2013, a cargo del Dr Jose Torres-Jimenez,
+CINVESTAV, UNIDAD TAMAULIPAS, LABORATORIO DE TECNOLOGÍAS DE INFORMACIÓN,
+Parque Científico y Tecnológico TECNOTAM -- Km. 5.5 carretera Cd.
+Victoria-Soto La Marina C.P. 87130 Cd. Victoria, Tamps. Teléfono:
+(834) 107 02 20 -- Fax: (834) 107 02 24 y (834) 314 73 92, vinculacion@tamps.cinvestav.mx}
+\begin{abstract}
+Un método sugerido de pruebas por Covering Arrays para probar la si
+una matriz binaria es, ó no, una Covering Array de $t\text{=2, v=2}$.
+NOTA: La efectividad de este método es hipotética. Hace falta ponerlo
+a prueba.
+\end{abstract}
+
+\section{Introducción}
+
+Para probar si una matriz de valores binarios de un solo dígito, es,
+ó no es, una Covering Array de $t\text{=2, v=2}$, es necesario verificar
+que, en cada pareja posible de columnas, existan las combinaciones
+\{00,01,10,11\}.
+
+Es posible probar si existe esta propiedad en cualquier matriz binaria,
+si aplicamos una verificación por fuerza bruta, que analice todas
+las parejas posibles de columnas de la matriz. Si la matriz es demasiado
+grande, quizás no sea conveniente aplicar este método, ya que el valor
+de pruebas necesarias sería proporcional a la cantidad de posibles
+combinaciones de columnas, dada por la fórmula
+
+\[
+p\text{=\ensuremath{\left(_{2}^{k}\right)}}
+\]
+
+
+Donde $p$ es la cantidad de posibles parejas de columnas, y $k$
+es la cantidad de columnas. La cantidad de columnas puede obtenerse
+por medio de
+
+\[
+k\leq\left(_{\left\lceil \frac{N}{2}\right\rceil }^{N-1}\right)
+\]
+
+
+Donde $N$ determina el tamaño de una Covering Array óptima en $N$
+de $t\text{=2, v=2}$.
+
+Es posible construir una Covering Array de $t\text{=2, v=2}$ realizando
+un conteo binario ordenado en polinomios mayor-qué de las combinaciones
+posibles con $\left\lceil \frac{N}{2}\right\rceil $ 1s y $N-1-\left\lceil \frac{N}{2}\right\rceil $
+0s. Si este conteo se almacena en una matriz, en la que cada fila
+sea uno de los valores binarios ordenados correspondientes a cada
+una de las combinaciones posibles, y después, se rota 90 grados hacia
+la izquierda dicha matriz, y se le concatena una fila llena de 0s,
+se obtiene una Covering Array de $t\text{=2, v=2}$.
+
+Las matrices generadas por este método requieren de una sola variable
+para ser generadas: $N$.
+
+Si quisiéramos utilizar una Covering Aarray de fuerza 2 para probar
+combinaciones de parejas de columnas, esta tendría que contar con
+suficientes bits para generar los pares de valores decimales correspondientes
+a parejas de columnas de una matriz binaria a la que se le aplica
+la prueba. Llamaremos $CA_{t}$a la Covering Array de fuerza 2 con
+$W_{t}$ columnas que utilizaríamos para probar si la matriz binaria
+$M$ con $W_{M}$ es, ó no es, una CA de de $t\text{=2, v=2}$.
+
+
+\section{Algoritmo}
+
+Si generamos $CA_{t}$ utilizando el método anterior, a partir de
+un valor de $N$, deberían cumplirse las siguientes condiciones:
+
+\[
+W_{t}\geq2\log_{2}W_{M}
+\]
+
+
+Esto, para que cada fila de $CA_{t}$ pueda representar un par determinado
+de columnas. También:
+
+\[
+W_{t}\text{=\ensuremath{\left(_{\left\lceil \frac{N}{2}\right\rceil }^{N-1}\right)}}
+\]
+
+
+Ya que, al rotar la matriz 90 grados hacia la izquierda, la cantidad
+de combinaciones posibles de los valores binarios mencionados anteriormente,
+se convierte en la cantidad de columnas de la CA resultante.
+
+Es necesario entonces encontrar un valor de $N$ tal que $W_{t}\geq2\log_{2}W_{M}$
+
+Para lograrlo, podríamos utilizar la siguiente aproximación:
+
+\[
+\left(_{k}^{n}\right)\approx\frac{n^{k}}{k!}
+\]
+
+
+Si
+
+\[
+n\text{=N-1}
+\]
+
+
+\[
+k\text{=\ensuremath{\left\lceil \frac{N}{2}\right\rceil }}
+\]
+
+
+Entonces
+
+\[
+N\approx\sqrt[\left\lceil \frac{N}{2}\right\rceil ]{\left\lceil \frac{N}{2}\right\rceil !\times W_{t}}\text{+1}
+\]
+
+
+Dado que $N\geq3$ (para que $W_{t}\geq2)$, debe cumplirse que
+
+\[
+\left\lceil \frac{N}{2}\right\rceil \leq\left\lceil \frac{N}{2}\right\rceil !\times W_{t}
+\]
+
+
+\[
+\frac{N}{2\left\lceil \frac{N}{2}\right\rceil !}\leq W_{t}
+\]
+
+
+Para que el resultado de la raíz arroje, por lo menos, un valor mayor
+ó igual a 1. Sin embargo, puede resultar un poco difícil despejar
+$N$ en la desigualdad anterior, por lo que es preferible utilizar
+una aproximación menos detallada:
+
+\[
+\left(_{k}^{n}\right)\approx n^{k}
+\]
+
+
+\[
+N\approx\sqrt[\left\lceil \frac{N}{2}\right\rceil ]{W_{t}}\text{+1}
+\]
+
+
+Utilizando el razonamiento anterior aquí, es fácil ver que debe cumplirse
+
+\[
+N\leq2W_{t}
+\]
+
+
+Es seguro establecer que $N\leq2W_{t}$ ya que \foreignlanguage{english}{$\frac{N}{2\left\lceil \frac{N}{2}\right\rceil !}\leq\frac{N}{2}\leq W_{t}$}
+para $N\geq3$
+
+Esto establece un límite superior para $N$ que nos permite acelerar
+la aproximación a una solución de $N$ en
+
+\[
+N\approx\sqrt[\left\lceil \frac{N}{2}\right\rceil ]{\left\lceil \frac{N}{2}\right\rceil !\times W_{t}}\text{+1}
+\]
+
+
+utilizando aproximaciones sucesivas ó tabulación.
+
+Habiendo obtenido un valor apropiado de $N$, es posible generar $CA_{t}$.
+Construir $CA_{t}$ con la $N$ obtenida podría resultar en una $CA_{t}$
+con \foreignlanguage{english}{$W_{t}>2\log_{2}W_{M}$} , en cuyo caso,
+deberán eliminarse las columnas excedentes de $CA_{t}$. Debido a
+que, al eliminar una columna cualquiera de una CA de fuerza dos, las
+demás parejas de columnas siguen preservando la propiedad de contener
+\{00, 01, 10, 11\}, la eliminación de columnas de una CA no debe ser
+un problema. Sin embargo: quizás la eliminación de ciertas columnas
+pueda eficientizar el proceso de prueba de alguna manera.
+
+Habiendo obtenido una $CA_{t}$ con la cantidad deseada de columnas,
+es posible recorrer sus filas para seleccionar pares de números binarios
+de $\log_{2}W_{M}$ bits que representen pares de columnas en $M$.
+Llamemos $A$ al número binario con bits desde el bit 0 hasta el bit
+\foreignlanguage{english}{$\log_{2}W_{M}-1$} y $B$ al número binario
+con bits desde el bit \foreignlanguage{english}{$\log_{2}W_{M}$}
+hasta el bit \foreignlanguage{english}{$2\log_{2}W_{M}\text{-1}$}
+en cualquier fila de $CA_{t}$. Para realizar un barrido que compruebe
+la propiedad \{00, 01, 10, 11\} en un par de columnas $C_{A}$ y $C_{B}$de
+$M$, deberá cumplirse que
+
+\[
+A<B
+\]
+
+
+De lo contrario, es preferible ignorar el barrido que sugiera la fila
+de $CA_{t}$, ya que podrían repetirse parejas de columnas de $M$,
+ó comparar una columna de $M$ consigo misma.
+
+
+\section{Generador de CAs en C}
+
+El siguiente código fuente utiliza el método mencionado en la introducción
+para contruir una CA de $t\text{=2, v=2}$.
+
+\lstinputlisting[basicstyle={\ttfamily}]{ca2.c}
+
+
+\section{Notas finales}
+
+Todavía hace falta probar y codificar el algoritmo sugerido en 2.
+Su efectividad es todavía hipotética.
+\end{document}
